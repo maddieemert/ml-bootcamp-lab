@@ -1,4 +1,4 @@
-## ML Bootcamp Lab
+# ML Bootcamp Lab
 
 Goal: Build two data prep pipelines using different datasets to get practice with data preparation and question building.
 
