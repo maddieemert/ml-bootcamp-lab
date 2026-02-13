@@ -188,24 +188,35 @@ prevalence_j = calculate_prevalence(y_j)
 prevalence_j
 
 #%%
-def create_data_partitions(X, y, random_state=42):
-    # Split data into Train (60%), Tune (20%), and Test (20%)
+def create_data_partitions(X, y, stratify_col, random_state=42):
+    # First split: Train (60%) and Temp (40%)
     X_train, X_temp, y_train, y_temp = train_test_split(
-        X, y, test_size=0.4, random_state=random_state
+        X, y,
+        test_size=0.4,
+        random_state=random_state,
+        stratify=stratify_col
     )
 
+    # Second split: stratify again
+    stratify_temp = X_temp[stratify_col.name]
+
     X_tune, X_test, y_tune, y_test = train_test_split(
-        X_temp, y_temp, test_size=0.5, random_state=random_state
+        X_temp, y_temp,
+        test_size=0.5,
+        random_state=random_state,
+        stratify=stratify_temp
     )
 
     return X_train, X_tune, X_test, y_train, y_tune, y_test
 
 #%%
 # Apply to college dataset
-X_train_c, X_tune_c, X_test_c, y_train_c, y_tune_c, y_test_c = create_data_partitions(X_c, y_c)
+X_train_c, X_tune_c, X_test_c, y_train_c, y_tune_c, y_test_c = \
+    create_data_partitions(X_c, y_c, stratify_col=X_c['control_encoded'])
 X_train_c, X_tune_c, X_test_c, y_train_c, y_tune_c, y_test_c
 
 #%%
 # Apply to job dataset
-X_train_j, X_tune_j, X_test_j, y_train_j, y_tune_j, y_test_j = create_data_partitions(X_j, y_j)
+X_train_j, X_tune_j, X_test_j, y_train_j, y_tune_j, y_test_j = \
+    create_data_partitions(X_j, y_j, stratify_col=X_j['workex_encoded'])
 X_train_j, X_tune_j, X_test_j, y_train_j, y_tune_j, y_test_j
